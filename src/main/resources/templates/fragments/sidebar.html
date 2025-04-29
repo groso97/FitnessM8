@@ -1,0 +1,32 @@
+<div th:fragment="sidebar">
+<aside class="w-64 bg-gray-800 min-h-screen p-6 flex flex-col justify-between">
+    <div>
+        <!-- Logo / Brand -->
+        <h1 class="text-2xl font-bold mb-10">FitnessM8</h1>
+
+        <!-- Navigation -->
+        <nav class="flex flex-col gap-6">
+            <a th:href="@{/dashboard}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
+                <!-- Tvoj SVG za dashboard -->
+                <span><!-- SVG ovde --></span>
+                <span>Dashboard</span>
+            </a>
+            <a th:href="@{/workouts}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
+                <!-- Tvoj SVG za workouts -->
+                <span><!-- SVG ovde --></span>
+                <span>Workouts</span>
+            </a>
+            <a th:href="@{/fitness-goals}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
+                <!-- Tvoj SVG za progress -->
+                <span><!-- SVG ovde --></span>
+                <span>Fitness goals</span>
+            </a>
+            <a th:href="@{/meals}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
+                <!-- Tvoj SVG za settings -->
+                <span><!-- SVG ovde --></span>
+                <span>Meals</span>
+            </a>
+        </nav>
+    </div>
+</aside>
+</div>

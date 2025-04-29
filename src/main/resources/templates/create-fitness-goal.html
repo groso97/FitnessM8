@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create/Edit Fitness Goal - FitnessM8</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex bg-gray-900 text-white min-h-screen">
+
+<!-- Sidebar -->
+<div th:insert="~{fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10">
+    <h2 class="text-3xl font-bold" th:text="${isEdit} ? 'Edit Fitness Goal' : 'Create Fitness Goal'">Create Fitness Goal</h2>
+  </div>
+
+  <!-- Form for EDIT -->
+  <form th:if="${isEdit}" th:action="@{/fitness-goals/update/{id}(id=${fitnessGoalDTO.fitnessGoalId})}"
+        method="post" class="space-y-6">
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Title</label>
+      <input type="text" name="title"
+             th:value="${fitnessGoalDTO.title}"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Exercise Type</label>
+      <input type="text" name="description"
+             th:value="${fitnessGoalDTO.description}"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Target date</label>
+      <input type="date" name="targetDate"
+             th:value="${fitnessGoalDTO.targetDate}"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Completed</label>
+      <input type="hidden" name="completed" value="false" />
+      <input type="checkbox" name="completed"
+             th:checked="${fitnessGoalDTO != null and fitnessGoalDTO.completed}"
+             class="h-5 w-5 text-purple-600">
+    </div>
+
+
+    <div class="flex gap-4">
+      <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg">
+        Update
+      </button>
+
+      <a th:href="@{/fitness-goals}" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg">
+        Cancel
+      </a>
+    </div>
+  </form>
+
+  <!-- Form for CREATE -->
+  <form th:unless="${isEdit}" th:action="@{/fitness-goals/create-fitness-goal}"
+        method="post" class="space-y-6">
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Title</label>
+      <input type="text" name="title"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Description</label>
+      <input type="text" name="description"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Target Date</label>
+      <input type="date" name="targetDate"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Completed</label>
+      <input type="checkbox" name="completed"
+             class="h-5 w-5 text-purple-600">
+    </div>
+
+
+    <div class="flex gap-4">
+      <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg">
+        Submit
+      </button>
+
+      <a th:href="@{/fitness-goals}" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg">
+        Cancel
+      </a>
+    </div>
+  </form>
+
+</main>
+<script>
+  // Fix to ensure checkbox always sends correct value
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form[th\\:if]"); // matches edit form
+    if (!form) return;
+
+    form.addEventListener("submit", function () {
+      const checkbox = form.querySelector("input[type='checkbox'][name='completed']");
+      if (!checkbox.checked) {
+        checkbox.disabled = true; // let hidden input with value="false" be sent
+      }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create - FitnessM8</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex bg-gray-900 text-white min-h-screen">
+
+<!-- Sidebar -->
+<div th:insert="~{fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10">
+    <h2 class="text-3xl font-bold" th:text="${isEdit} ? 'Edit Meal' : 'Create Meal'">Create Meal</h2>
+  </div>
+
+  <!-- Form for EDIT -->
+  <form th:if="${isEdit}" th:action="@{/meals/update/{id}(id=${mealDTO.mealId})}"
+        method="post" class="space-y-6">
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Meal Name</label>
+      <input type="text" name="mealName"
+             th:value="${mealDTO.mealName}"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Calories</label>
+      <input type="text" name="calories"
+             th:value="${mealDTO.calories}"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Proteins</label>
+      <input type="number" name="proteins"
+             th:value="${mealDTO.proteins}"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Fats</label>
+      <input type="number" name="fats"
+             th:value="${mealDTO.fats}"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Carbs</label>
+      <input type="number" name="carbs"
+             th:value="${mealDTO.carbs}"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div class="flex gap-4">
+      <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg">
+        Update
+      </button>
+
+      <a th:href="@{/meals}" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg">
+        Cancel
+      </a>
+    </div>
+  </form>
+
+  <!-- Form for CREATE -->
+  <form th:unless="${isEdit}" th:action="@{/meals/create-meal}"
+        method="post" class="space-y-6">
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Meal Name</label>
+      <input type="text" name="mealName"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Calories</label>
+      <input type="text" name="calories"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Proteins</label>
+      <input type="number" name="proteins"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Fats</label>
+      <input type="number" name="fats"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div>
+      <label class="block mb-2 text-sm font-medium text-gray-300">Carbs</label>
+      <input type="number" name="carbs"
+             required
+             class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+    </div>
+
+    <div class="flex gap-4">
+      <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg">
+        Submit
+      </button>
+
+      <a th:href="@{/meals}" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg">
+        Cancel
+      </a>
+    </div>
+  </form>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - FitnessM8</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex bg-gray-900 text-white min-h-screen">
+
+<!-- Sidebar -->
+<div th:insert="~{fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-3xl font-bold">Your Profile</h2>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="bg-gray-800 p-10 rounded-2xl shadow-lg w-full">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start sm:space-x-10">
+            <img th:src="${user.avatarUrl != null ? user.avatarUrl : '/img/default-avatar.png'}"
+                 alt="User Avatar"
+                 class="w-36 h-36 rounded-full object-cover border-4 border-purple-600 mb-6 sm:mb-0">
+
+
+            <div class="flex-1 text-center sm:text-left">
+                <h3 class="text-3xl font-bold mb-4" th:text="${user.firstName + ' ' + user.lastName}">User Name</h3>
+                <p class="text-lg text-gray-300 mb-1" th:text="'Username: ' + ${user.username}">Username</p>
+                <p class="text-lg text-gray-300 mb-1" th:text="'Email: ' + ${user.email}">Email</p>
+                <p class="text-lg text-gray-300 mb-6" th:text="'Member since: ' + ${user.registrationDate}">Registration Date</p>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row sm:justify-start justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                    <a th:href="@{/profile/edit}"
+                       class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2.5 px-6 rounded-2xl transition duration-200">
+                        Edit
+                    </a>
+                    <form th:action="@{/profile/delete}" method="post"
+                          onsubmit="return confirm('Are you sure you want to delete your account?');">
+                        <button type="submit"
+                                class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-semibold py-2.5 px-6 rounded-2xl transition duration-200">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitnessM8 - Fitness Goals</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex bg-gray-900 text-white min-h-screen">
+
+<!-- Sidebar -->
+<div th:insert="~{fragments/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<main class="flex-1 p-8 overflow-y-auto">
+
+  <!-- Alerts -->
+  <div th:if="${success}" class="mb-4 p-4 bg-green-600 text-white rounded-lg">
+    <p th:text="${success}"></p>
+  </div>
+  <div th:if="${error}" class="mb-4 p-4 bg-red-600 text-white rounded-lg">
+    <p th:text="${error}"></p>
+  </div>
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-10">
+    <h2 class="text-3xl font-bold">Fitness Goals</h2>
+    <a th:href="@{/fitness-goals/create-fitness-goal}" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg">
+      + Add Goal
+    </a>
+  </div>
+
+  <!-- Progress Overview -->
+  <div class="mb-8">
+    <p class="text-sm mb-2 text-gray-400">Total progress:</p>
+    <div class="w-full bg-gray-700 rounded-full h-4">
+      <div class="bg-purple-600 h-4 rounded-full"
+           th:style="'width:' + ${progressPercentage} + '%'"></div>
+    </div>
+    <p class="text-right text-xs mt-1 text-gray-400" th:text="${progressPercentage + '% completed'}"></p>
+  </div>
+
+  <!-- Multi-delete form -->
+  <form th:action="@{/fitness-goals/delete-multiple}" method="post" onsubmit="return confirm('Are you sure you want to delete selected goals?');">
+    <div class="flex justify-end mb-4">
+      <button type="submit"
+              class="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold py-2 px-5 rounded-lg disabled:opacity-50"
+              id="deleteSelectedBtn" disabled>
+        Delete Selected
+      </button>
+    </div>
+
+    <!-- Fitness Goals Grid -->
+    <div th:if="${#lists.isEmpty(fitnessGoals)}">
+      <p class="text-gray-400">You haven't set any fitness goals yet.</p>
+    </div>
+
+    <div th:unless="${#lists.isEmpty(fitnessGoals)}"
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div th:each="fitnessGoal : ${fitnessGoals}" class="bg-gray-800 p-6 rounded-2xl">
+        <!-- Checkbox for multi-select -->
+        <input type="checkbox" name="selectedGoals"
+               th:value="${fitnessGoal.fitnessGoalId}"
+               class="form-checkbox h-5 w-5 text-purple-600 mb-4"
+               onchange="toggleDeleteButton()" />
+
+        <!-- Goal Info -->
+        <div class="flex-1">
+          <div class="flex justify-between items-center mb-2">
+            <h3 class="text-xl font-semibold" th:text="${fitnessGoal.title()}">Title</h3>
+          </div>
+
+          <p class="text-gray-300 text-sm mb-3" th:text="${fitnessGoal.description()}">Description</p>
+
+          <!-- Due Date -->
+          <p class="text-gray-400 text-sm mb-3" th:text="'Due: ' + ${fitnessGoal.targetDate()}">Target Date</p>
+
+          <!-- Completed Status -->
+          <span th:if="${fitnessGoal.completed()}" class="text-green-400 font-medium">Completed</span>
+          <span th:unless="${fitnessGoal.completed}" class="text-yellow-400 font-medium">In Progress</span>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex space-x-4 mt-4">
+          <a th:href="@{'/fitness-goals/edit/' + ${fitnessGoal.fitnessGoalId()}}"
+             class="inline-block bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2.5 px-5 rounded-2xl transition duration-200">
+            Edit
+          </a>
+
+          <!-- Individual Delete Button -->
+          <form th:action="@{'/fitness-goals/delete/' + ${fitnessGoal.fitnessGoalId()}}" method="post"
+                onsubmit="return confirm('Are you sure you want to delete this goal?');">
+            <button type="submit"
+                    class="inline-block bg-gray-700 hover:bg-gray-600 text-white text-sm font-semibold py-2.5 px-5 rounded-2xl transition duration-200">
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</main>
+
+<script>
+  function toggleDeleteButton() {
+    const checkboxes = document.querySelectorAll('input[name="selectedGoals"]:checked');
+    const deleteBtn = document.getElementById('deleteSelectedBtn');
+    deleteBtn.disabled = checkboxes.length === 0;
+  }
+</script>
+
+</body>
+</html>
