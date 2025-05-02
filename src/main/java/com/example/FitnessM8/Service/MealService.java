@@ -72,7 +72,7 @@ public class MealService {
         meal.setMealName(mealDTO.mealName());
         meal.setCalories(mealDTO.calories());
         meal.setProteins(mealDTO.proteins());
-        meal.setFats(mealDTO.carbs());
+        meal.setFats(mealDTO.fats());
         meal.setCarbs(mealDTO.carbs());
 
 

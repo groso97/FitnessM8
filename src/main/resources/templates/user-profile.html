@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile - FitnessM8</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+<head th:replace="~{fragments/head :: commonHead('FitnessM8 | User profile')}"></head>
+
 <body class="flex bg-gray-900 text-white min-h-screen">
 
 <!-- Sidebar -->
@@ -13,7 +9,16 @@
 
 <!-- Main Content -->
 <main class="flex-1 p-8 overflow-y-auto">
-
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="mb-6 p-4 bg-green-700 text-white rounded-lg shadow">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div th:if="${infoMessage}" class="mb-6 p-4 bg-blue-700 text-white rounded-lg shadow">
+        <p th:text="${infoMessage}"></p>
+    </div>
+    <div th:if="${errorMessage}" class="mb-6 p-4 bg-red-700 text-white rounded-lg shadow">
+        <p th:text="${errorMessage}"></p>
+    </div>
     <!-- Header -->
     <div class="flex justify-between items-center mb-10">
         <h2 class="text-3xl font-bold">Your Profile</h2>
@@ -26,7 +31,6 @@
                  alt="User Avatar"
                  class="w-36 h-36 rounded-full object-cover border-4 border-purple-600 mb-6 sm:mb-0">
 
-
             <div class="flex-1 text-center sm:text-left">
                 <h3 class="text-3xl font-bold mb-4" th:text="${user.firstName + ' ' + user.lastName}">User Name</h3>
                 <p class="text-lg text-gray-300 mb-1" th:text="'Username: ' + ${user.username}">Username</p>
@@ -35,11 +39,13 @@
 
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row sm:justify-start justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-                    <a th:href="@{/profile/edit}"
-                       class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2.5 px-6 rounded-2xl transition duration-200">
+                    <button
+                            type="button"
+                            onclick="document.getElementById('editForm').classList.toggle('hidden')"
+                            class="bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2.5 px-6 rounded-2xl transition duration-200">
                         Edit
-                    </a>
-                    <form th:action="@{/profile/delete}" method="post"
+                    </button>
+                    <form th:action="@{/user-profile/delete}" method="post"
                           onsubmit="return confirm('Are you sure you want to delete your account?');">
                         <button type="submit"
                                 class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-semibold py-2.5 px-6 rounded-2xl transition duration-200">
@@ -50,6 +56,44 @@
             </div>
         </div>
     </div>
+
+    <!-- Edit Form (Hidden by default) -->
+    <form id="editForm" th:action="@{/user-profile/update}" method="post" th:object="${user}" class="mt-10 hidden bg-gray-800 p-8 rounded-2xl shadow-md">
+        <h3 class="text-2xl font-semibold mb-6">Edit Your Profile</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium mb-1">First Name</label>
+                <input type="text" th:field="*{firstName}" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Last Name</label>
+                <input type="text" th:field="*{lastName}" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Username</label>
+                <input type="text" th:field="*{username}" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600" />
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Email</label>
+                <input type="email" th:field="*{email}" class="w-full p-2 rounded bg-gray-700 text-white border border-gray-600" />
+            </div>
+        </div>
+
+        <!-- Form Buttons -->
+        <div class="mt-6 flex justify-end space-x-4">
+            <button
+                    type="button"
+                    onclick="document.getElementById('editForm').classList.add('hidden')"
+                    class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-2xl">
+                Cancel
+            </button>
+            <button
+                    type="submit"
+                    class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-2xl">
+                Save Changes
+            </button>
+        </div>
+    </form>
 
 </main>
 </body>
