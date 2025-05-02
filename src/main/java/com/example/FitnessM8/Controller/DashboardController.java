@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -36,38 +39,60 @@ public class DashboardController {
         List<Workout> workouts = user.getWorkouts();
         List<Meal> meals = user.getMeals();
 
-        // Calculate daily calories
-        int caloriesIn = meals.stream().mapToInt(Meal::getCalories).sum();
-        int caloriesOut = workouts.stream().mapToInt(Workout::getCaloriesBurned).sum();
-        int calorieBalance = caloriesIn - caloriesOut;
+        // Današnji podaci
+        LocalDate today = LocalDate.now();
+        int caloriesInToday = meals.stream()
+                .filter(m -> m.getMealDate().equals(today))
+                .mapToInt(Meal::getCalories).sum();
 
-        // Prepare workout progress data
-        List<String> progressDates = workouts.stream()
-                .map(w -> w.getWorkoutDate().toString())
-                .collect(Collectors.toList());
+        int caloriesOutToday = workouts.stream()
+                .filter(w -> w.getWorkoutDate().equals(today))
+                .mapToInt(Workout::getCaloriesBurned).sum();
 
-        List<Integer> progressCalories = workouts.stream()
-                .map(Workout::getCaloriesBurned)
-                .collect(Collectors.toList());
+        int calorieBalance = caloriesInToday - caloriesOutToday;
 
-        // Get fitness goals for the user
-        List<FitnessGoalDTO> fitnessGoals = fitnessGoalService.getFitnessGoalsForCurrentUser(email);
+        // Kalorije za zadnjih 7 dana
+        LocalDate weekAgo = today.minusDays(6);
+        Map<LocalDate, Integer> mealCaloriesPerDay = meals.stream()
+                .filter(m -> !m.getMealDate().isBefore(weekAgo))
+                .collect(Collectors.groupingBy(Meal::getMealDate,
+                        Collectors.summingInt(Meal::getCalories)));
 
-        // Featured workout (highest calories burned)
+        Map<LocalDate, Integer> workoutCaloriesPerDay = workouts.stream()
+                .filter(w -> !w.getWorkoutDate().isBefore(weekAgo))
+                .collect(Collectors.groupingBy(Workout::getWorkoutDate,
+                        Collectors.summingInt(Workout::getCaloriesBurned)));
+
+        List<String> last7Days = new ArrayList<>();
+        List<Integer> caloriesInList = new ArrayList<>();
+        List<Integer> caloriesOutList = new ArrayList<>();
+
+        for (int i = 0; i < 7; i++) {
+            LocalDate date = weekAgo.plusDays(i);
+            last7Days.add(date.toString());
+            caloriesInList.add(mealCaloriesPerDay.getOrDefault(date, 0));
+            caloriesOutList.add(workoutCaloriesPerDay.getOrDefault(date, 0));
+        }
+
+        // Najbolji trening
         Workout featuredWorkout = workouts.stream()
                 .max(Comparator.comparingInt(Workout::getCaloriesBurned))
                 .orElse(null);
 
-        // Pass data to the model
+        // Ciljevi
+        List<FitnessGoalDTO> fitnessGoals = fitnessGoalService.getFitnessGoalsForCurrentUser(email);
+
+        // Model
         model.addAttribute("user", user);
-        model.addAttribute("dailyCaloriesIn", caloriesIn);
-        model.addAttribute("dailyCaloriesOut", caloriesOut);
+        model.addAttribute("dailyCaloriesIn", caloriesInToday);
+        model.addAttribute("dailyCaloriesOut", caloriesOutToday);
         model.addAttribute("calorieBalance", calorieBalance);
-        model.addAttribute("progressDates", progressDates);
-        model.addAttribute("progressCalories", progressCalories);
         model.addAttribute("featuredWorkout", featuredWorkout);
-        model.addAttribute("todaysMeals", meals); // Filter by today's date if needed
+        model.addAttribute("todaysMeals", meals.stream().filter(m -> m.getMealDate().equals(today)).toList());
         model.addAttribute("fitnessGoals", fitnessGoals);
+        model.addAttribute("last7Days", last7Days);
+        model.addAttribute("caloriesInList", caloriesInList);
+        model.addAttribute("caloriesOutList", caloriesOutList);
 
         return "dashboard";
     }

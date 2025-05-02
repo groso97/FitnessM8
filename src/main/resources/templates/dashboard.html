@@ -10,12 +10,17 @@
 <main class="flex-1 p-8 overflow-y-auto">
     <!-- Header -->
     <div class="flex justify-between items-center mb-10">
-        <h2 class="text-3xl font-bold">Welcome, <span class="text-purple-600" th:text="${user.firstName}"></span></h2>
+        <h2 class="text-3xl font-bold">
+            Welcome,
+            <span class="text-purple-600" th:text="${user != null ? user.firstName : 'User'}"></span>
+        </h2>
 
         <!-- Profile icon -->
         <div class="relative">
             <button id="profileButton" class="flex items-center gap-2 bg-gray-800 p-2 rounded-full border-4 border-purple-600 hover:bg-gray-700">
-                <img th:src="${user.avatarUrl != null ? user.avatarUrl : '/img/default-avatar.png'}" alt="User Avatar" class="w-10 h-10 rounded-full">
+                <img th:src="${user != null and user.avatarUrl != null ? user.avatarUrl : '/img/default-avatar.png'}"
+                     alt="User Avatar"
+                     class="w-10 h-10 rounded-full">
             </button>
             <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg overflow-hidden">
                 <a th:href="@{/user-profile}" class="block px-4 py-2 hover:bg-gray-700">Profile</a>
@@ -31,67 +36,76 @@
 
         <!-- Daily Summary -->
         <div class="bg-gray-800 p-6 rounded-2xl">
-            <h3 class="text-2xl font-semibold mb-4">Calories</h3>
-            <p th:text="'Calories in: ' + ${dailyCaloriesIn}"></p>
-            <p th:text="'Calories out: ' + ${dailyCaloriesOut}"></p>
-            <p th:text="'Balance: ' + ${calorieBalance}"></p>
+            <p class="text-2xl font-semibold text-white mb-1" th:text="'Calories in: ' + (${dailyCaloriesIn} ?: 0)"></p>
+            <p class="text-2xl font-semibold text-white mb-1" th:text="'Calories out: ' + (${dailyCaloriesOut} ?: 0)"></p>
+            <p class="text-2xl font-semibold text-[#a855f7] mb-1" th:text="'Balance: ' + (${calorieBalance} ?: 0)"></p>
         </div>
 
         <!-- Workout History -->
         <div class="bg-gray-800 p-6 rounded-2xl">
             <h3 class="text-2xl font-semibold mb-4">Workout History</h3>
-            <div class="space-y-2">
+            <div class="space-y-2" th:if="${user != null and user.workouts != null and !#lists.isEmpty(user.workouts)}">
                 <div th:each="workout : ${user.workouts}">
                     <div th:text="${workout.workoutDate} + ' - ' + ${workout.workoutName}"></div>
                 </div>
             </div>
+            <p th:if="${user == null or user.workouts == null or #lists.isEmpty(user.workouts)}">No workouts found.</p>
         </div>
 
         <!-- Featured Workout -->
         <div class="bg-gray-800 p-6 rounded-2xl">
             <h3 class="text-2xl font-semibold mb-4">Featured Workout</h3>
-            <h4 th:text="${featuredWorkout.workoutName}"></h4>
-            <p th:text="'Duration: ' + ${featuredWorkout.durationMinutes} + ' min'"></p>
-            <p th:text="'Calories: ' + ${featuredWorkout.caloriesBurned}"></p>
+            <div th:if="${featuredWorkout != null}">
+                <h4 th:text="${featuredWorkout.workoutName}"></h4>
+                <p th:text="'Duration: ' + ${featuredWorkout.durationMinutes} + ' min'"></p>
+                <p th:text="'Calories: ' + ${featuredWorkout.caloriesBurned}"></p>
+            </div>
+            <p th:if="${featuredWorkout == null}">No featured workout today.</p>
         </div>
 
         <!-- Progress Chart -->
-        <div class="bg-gray-800 p-6 rounded-2xl col-span-1">
+        <div class="bg-gray-800 p-6 rounded-2xl col-span-1 md:col-span-2">
             <h3 class="text-2xl font-semibold mb-4">Progress</h3>
-            <canvas id="progressChart" class="w-full h-40"></canvas>
+            <div class="relative w-full h-[400px]">
+                <canvas id="progressChart" class="absolute inset-0"></canvas>
+            </div>
         </div>
 
         <!-- Recent Meals -->
         <div class="bg-gray-800 p-6 rounded-2xl">
             <h3 class="text-2xl font-semibold mb-4">Today’s Meals</h3>
-            <ul class="space-y-2">
+            <ul class="space-y-2" th:if="${todaysMeals != null and !#lists.isEmpty(todaysMeals)}">
                 <li th:each="meal : ${todaysMeals}">
-                    <div th:text="${meal.mealName} + ' (' + ${meal.calories} + ' kcal)'"></div>
+                    <div th:text="${meal.mealName} + ' (' + ${meal.calories} + ' kcal, p: ' + ${meal.proteins} + 'g, f: ' + ${meal.fats} + 'g, c: ' + ${meal.carbs} + 'g)'"></div>
                 </li>
             </ul>
+            <p th:if="${todaysMeals == null or #lists.isEmpty(todaysMeals)}">No meals logged for today.</p>
         </div>
 
         <!-- Fitness Goals -->
         <div class="bg-gray-800 p-6 rounded-2xl col-span-2">
             <h3 class="text-2xl font-semibold mb-4">Fitness Goals</h3>
-            <div th:each="goal : ${user.fitnessGoals}" class="mb-4">
+            <div th:if="${user != null and user.fitnessGoals != null and !#lists.isEmpty(user.fitnessGoals)}"
+                 th:each="goal : ${user.fitnessGoals}" class="mb-4">
                 <div class="mb-1 text-lg font-medium" th:text="${goal.title}"></div>
                 <div class="w-full bg-gray-700 rounded-full h-4">
                     <div class="bg-purple-600 h-4 rounded-full" th:style="'width:' + ${goal.progressPercent} + '%'"></div>
                 </div>
-
                 <p class="text-sm mt-1">
                     <span th:text="'Due: ' + ${goal.targetDate}"></span> |
                     <span th:text="'Completed: ' + ${goal.completed}"></span>
                 </p>
             </div>
+            <p th:if="${user == null or user.fitnessGoals == null or #lists.isEmpty(user.fitnessGoals)}">No fitness goals set.</p>
         </div>
 
     </div>
 </main>
 
-<!-- Skripta za otvaranje/zatvaranje dropdowna -->
-<script>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script th:inline="javascript">
     const profileButton = document.getElementById('profileButton');
     const profileMenu = document.getElementById('profileMenu');
 
@@ -104,6 +118,94 @@
             profileMenu.classList.add('hidden');
         }
     });
+
+    // Chart.js - Calories In vs Out
+    /*<![CDATA[*/
+    const labels = /*[[${last7Days}]]*/ [];
+    const caloriesIn = /*[[${caloriesInList}]]*/ [];
+    const caloriesOut = /*[[${caloriesOutList}]]*/ [];
+
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    const progressChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Calories In',
+                    data: caloriesIn,
+                    fill: false,
+                    borderColor: '#a855f7',
+                    backgroundColor: '#a855f7',
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                },
+                {
+                    label: 'Calories Out',
+                    data: caloriesOut,
+                    fill: false,
+                    borderColor: '#ef4444',
+                    backgroundColor: '#ef4444',
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#ffffff',
+                        font: {
+                            size: 14,
+                            weight: 'bold'
+                        }
+                    },
+                    position: 'bottom'
+                },
+                title: {
+                    display: true,
+                    text: 'Calories In vs Out (Last 7 Days)',
+                    color: '#ffffff',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
+                    }
+                },
+                tooltip: {
+                    bodyColor: '#ffffff',
+                    titleColor: '#ffffff',
+                    backgroundColor: '#1f2937'
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#ffffff',
+                        font: { size: 12 }
+                    },
+                    grid: {
+                        color: '#4b5563'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: '#ffffff',
+                        font: { size: 12 }
+                    },
+                    grid: {
+                        color: '#4b5563'
+                    },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    /*]]>*/
 </script>
 
 </body>
