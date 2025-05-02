@@ -38,6 +38,20 @@ public class FitnessGoal {
         this.user = user;
     }
 
+    public double getProgressPercent() {
+        if (completed) {
+            return 100.0;
+        }
+        // Ako nije završen, možete dodati logiku temeljem preostalog vremena ili cilja
+        // Ovdje pretpostavljamo da imate neku logiku za napredak u postocima, npr. na temelju vremena
+        long daysRemaining = targetDate.toEpochDay() - LocalDate.now().toEpochDay();
+        if (daysRemaining > 0) {
+            return 100.0 - (daysRemaining * 100.0 / 30);  // Pretpostavka da je cilj postavljen na 30 dana
+        }
+        return 0.0;
+    }
+
+
     public Long getFitnessGoalId() {
         return fitnessGoalId;
     }

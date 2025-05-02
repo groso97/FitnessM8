@@ -111,6 +111,4 @@ public class FitnessGoalService {
 
         return (int) Math.round((double) completedCount / goals.size() * 100);
     }
-
-
 }

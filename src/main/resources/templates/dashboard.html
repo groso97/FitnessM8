@@ -3,85 +3,91 @@
 <head th:replace="~{fragments/head :: commonHead('FitnessM8 | Dashboard')}"></head>
 
 <body class="flex bg-gray-900 text-white min-h-screen">
-
 <!-- Sidebar -->
 <div th:insert="~{fragments/sidebar :: sidebar}"></div>
 
-
-<!-- Main Content -->
+<!-- Main -->
 <main class="flex-1 p-8 overflow-y-auto">
-
     <!-- Header -->
     <div class="flex justify-between items-center mb-10">
-        <h2 class="text-3xl font-bold">Welcome, John</h2>
+        <h2 class="text-3xl font-bold">Welcome, <span class="text-purple-600" th:text="${user.firstName}"></span></h2>
 
-        <!-- Profilna ikona -->
+        <!-- Profile icon -->
         <div class="relative">
-            <button id="profileButton" class="flex items-center gap-2 bg-gray-800 p-2 rounded-full object-cover border-4 border-purple-600 hover:bg-gray-700">
-                <!-- Profil SVG ili slika -->
-                <img th:src="${user.avatarUrl != null ? user.avatarUrl : '/img/default-avatar.png'}" alt="User Avatar" class="w-10 h-10 rounded-full ">
-
+            <button id="profileButton" class="flex items-center gap-2 bg-gray-800 p-2 rounded-full border-4 border-purple-600 hover:bg-gray-700">
+                <img th:src="${user.avatarUrl != null ? user.avatarUrl : '/img/default-avatar.png'}" alt="User Avatar" class="w-10 h-10 rounded-full">
             </button>
-
-            <!-- Dropdown meni za usera -->
             <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg overflow-hidden">
                 <a th:href="@{/user-profile}" class="block px-4 py-2 hover:bg-gray-700">Profile</a>
                 <form th:action="@{/logout}" method="post">
-                    <button type="submit" class="block px-4 py-2 hover:bg-gray-700 w-full text-left">
-                        Log Out
-                    </button>
-                </form>            </div>
+                    <button type="submit" class="block px-4 py-2 hover:bg-gray-700 w-full text-left">Log Out</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <!-- Dashboard Grid -->
+    <!-- Dashboard content -->
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
 
-        <!-- 1. Workout History -->
+        <!-- Daily Summary -->
+        <div class="bg-gray-800 p-6 rounded-2xl">
+            <h3 class="text-2xl font-semibold mb-4">Calories</h3>
+            <p th:text="'Calories in: ' + ${dailyCaloriesIn}"></p>
+            <p th:text="'Calories out: ' + ${dailyCaloriesOut}"></p>
+            <p th:text="'Balance: ' + ${calorieBalance}"></p>
+        </div>
+
+        <!-- Workout History -->
         <div class="bg-gray-800 p-6 rounded-2xl">
             <h3 class="text-2xl font-semibold mb-4">Workout History</h3>
             <div class="space-y-2">
-                <!-- Ovde ces ti mapirati podatke iz baze -->
-                <div>Workout 1</div>
-                <div>Workout 2</div>
-                <div>Workout 3</div>
+                <div th:each="workout : ${user.workouts}">
+                    <div th:text="${workout.workoutDate} + ' - ' + ${workout.workoutName}"></div>
+                </div>
             </div>
         </div>
 
-        <!-- 2. Featured Workout -->
+        <!-- Featured Workout -->
         <div class="bg-gray-800 p-6 rounded-2xl">
-            <div class="w-full h-32 bg-gray-700 rounded-xl mb-4 flex items-center justify-center">
-                <!-- Slika placeholder ili prava -->
-                Image
-            </div>
-            <h3 class="text-2xl font-semibold mb-2">Featured Workout</h3>
-            <p class="mb-4">Duration: 60 min</p>
-            <button class="bg-purple-600 px-4 py-2 rounded-lg hover:bg-purple-700">Start</button>
+            <h3 class="text-2xl font-semibold mb-4">Featured Workout</h3>
+            <h4 th:text="${featuredWorkout.workoutName}"></h4>
+            <p th:text="'Duration: ' + ${featuredWorkout.durationMinutes} + ' min'"></p>
+            <p th:text="'Calories: ' + ${featuredWorkout.caloriesBurned}"></p>
         </div>
 
-        <!-- 3. Progress Chart -->
-        <div class="bg-gray-800 p-6 rounded-2xl">
+        <!-- Progress Chart -->
+        <div class="bg-gray-800 p-6 rounded-2xl col-span-1">
             <h3 class="text-2xl font-semibold mb-4">Progress</h3>
-            <div class="w-full h-40 bg-gray-700 rounded-lg flex items-center justify-center">
-                <!-- Ovde ces ti ubaciti grafikon -->
-                Chart
-            </div>
+            <canvas id="progressChart" class="w-full h-40"></canvas>
         </div>
 
-        <!-- 4. Exercise List -->
-        <div class="bg-gray-800 p-6 rounded-2xl md:col-span-2">
-            <h3 class="text-2xl font-semibold mb-4">Exercise List</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Ovde ces isto mapirati iz baze -->
-                <div class="bg-gray-700 p-4 rounded-lg text-center">Push-ups</div>
-                <div class="bg-gray-700 p-4 rounded-lg text-center">Pull-ups</div>
-                <div class="bg-gray-700 p-4 rounded-lg text-center">Squats</div>
-                <div class="bg-gray-700 p-4 rounded-lg text-center">Plank</div>
+        <!-- Recent Meals -->
+        <div class="bg-gray-800 p-6 rounded-2xl">
+            <h3 class="text-2xl font-semibold mb-4">Today’s Meals</h3>
+            <ul class="space-y-2">
+                <li th:each="meal : ${todaysMeals}">
+                    <div th:text="${meal.mealName} + ' (' + ${meal.calories} + ' kcal)'"></div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Fitness Goals -->
+        <div class="bg-gray-800 p-6 rounded-2xl col-span-2">
+            <h3 class="text-2xl font-semibold mb-4">Fitness Goals</h3>
+            <div th:each="goal : ${user.fitnessGoals}" class="mb-4">
+                <div class="mb-1 text-lg font-medium" th:text="${goal.title}"></div>
+                <div class="w-full bg-gray-700 rounded-full h-4">
+                    <div class="bg-purple-600 h-4 rounded-full" th:style="'width:' + ${goal.progressPercent} + '%'"></div>
+                </div>
+
+                <p class="text-sm mt-1">
+                    <span th:text="'Due: ' + ${goal.targetDate}"></span> |
+                    <span th:text="'Completed: ' + ${goal.completed}"></span>
+                </p>
             </div>
         </div>
 
     </div>
-
 </main>
 
 <!-- Skripta za otvaranje/zatvaranje dropdowna -->

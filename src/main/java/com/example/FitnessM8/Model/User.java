@@ -122,4 +122,27 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
+    public List<FitnessGoal> getFitnessGoals() {
+        return fitnessGoals;
+    }
+
+    public void setFitnessGoals(List<FitnessGoal> fitnessGoals) {
+        this.fitnessGoals = fitnessGoals;
+    }
+
+    public List<Workout> getWorkouts() {
+        return workouts;
+    }
+
+    public void setWorkouts(List<Workout> workouts) {
+        this.workouts = workouts;
+    }
+
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
+    }
 }

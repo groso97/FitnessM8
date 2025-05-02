@@ -1,37 +1,49 @@
 <div th:fragment="sidebar">
-<aside class="w-64 bg-gray-800 min-h-screen p-6 flex flex-col justify-between">
-    <div>
-        <!-- Logo / Brand -->
-        <div class="flex items-center h-16 mb-10">
-            <a th:href="@{/dashboard}" class="mx-auto">
-                <img src="/img/logo-fitnessm8.png" alt="FitnessM8 Logo" class="w-48">
-            </a>
+    <aside class="w-64 bg-gray-800 min-h-screen p-6 flex flex-col justify-between text-white">
+        <div>
+            <div class="flex items-center h-16 mb-10">
+                <a th:href="@{/dashboard}" class="mx-auto">
+                    <img src="/img/logo-fitnessm8.png" alt="FitnessM8 Logo" class="w-48">
+                </a>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex flex-col gap-6">
+                <a th:href="@{/dashboard}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M3 10h4V3H3v7zM3 21h4v-7H3v7zM10 21h4V10h-4v11zM17 21h4V14h-4v7z" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a th:href="@{/workouts}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 6h2v12H6zM16 6h2v12h-2zM10 10h4v4h-4z" />
+                    </svg>
+                    <span>Workouts</span>
+                </a>
+                <a th:href="@{/fitness-goals}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M5 3v18M5 3h10l-2 5 2 5H5" />
+                    </svg>
+                    <span>Fitness goals</span>
+                </a>
+
+                <a th:href="@{/meals}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M8 3v18M16 3v18M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Meals</span>
+                </a>
+
+            </nav>
         </div>
-
-
-        <!-- Navigation -->
-        <nav class="flex flex-col gap-6">
-            <a th:href="@{/dashboard}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
-                <!-- Tvoj SVG za dashboard -->
-                <span><!-- SVG ovde --></span>
-                <span>Dashboard</span>
-            </a>
-            <a th:href="@{/workouts}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
-                <!-- Tvoj SVG za workouts -->
-                <span><!-- SVG ovde --></span>
-                <span>Workouts</span>
-            </a>
-            <a th:href="@{/fitness-goals}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
-                <!-- Tvoj SVG za progress -->
-                <span><!-- SVG ovde --></span>
-                <span>Fitness goals</span>
-            </a>
-            <a th:href="@{/meals}" class="flex items-center gap-3 hover:bg-gray-700 p-3 rounded-lg">
-                <!-- Tvoj SVG za settings -->
-                <span><!-- SVG ovde --></span>
-                <span>Meals</span>
-            </a>
-        </nav>
-    </div>
-</aside>
+    </aside>
 </div>
