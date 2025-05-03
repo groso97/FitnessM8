@@ -1,0 +1,37 @@
+<div th:fragment="flashMessages" xmlns:x-transition="http://www.w3.org/1999/xhtml">
+    <!-- Success Message -->
+    <div x-data="{ show: true }"
+         x-init="setTimeout(() => show = false, 4000)"
+         x-show="show"
+         x-transition:leave="transition-opacity duration-500"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         th:if="${successMessage}"
+         class="mb-6 p-4 bg-green-700 text-white rounded-lg shadow">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <!-- Info Message -->
+    <div x-data="{ show: true }"
+         x-init="setTimeout(() => show = false, 4000)"
+         x-show="show"
+         x-transition:leave="transition-opacity duration-500"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         th:if="${infoMessage}"
+         class="mb-6 p-4 bg-blue-700 text-white rounded-lg shadow">
+        <p th:text="${infoMessage}"></p>
+    </div>
+
+    <!-- Error Message -->
+    <div x-data="{ show: true }"
+         x-init="setTimeout(() => show = false, 4000)"
+         x-show="show"
+         x-transition:leave="transition-opacity duration-500"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         th:if="${errorMessage}"
+         class="mb-6 p-4 bg-red-700 text-white rounded-lg shadow">
+        <p th:text="${errorMessage}"></p>
+    </div>
+</div>

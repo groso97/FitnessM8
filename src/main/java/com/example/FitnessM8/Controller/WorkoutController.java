@@ -72,9 +72,9 @@ public class WorkoutController {
 
         try {
             workoutService.createWorkout(workoutDTO, principal.getName());
-            redirectAttributes.addFlashAttribute("success", "Workout created successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Workout created successfully!");
         }catch (RuntimeException e){
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
         return "redirect:/workouts";
     }
@@ -89,9 +89,9 @@ public class WorkoutController {
 
         try {
             workoutService.deleteWorkoutById(workoutId, user);
-            redirectAttributes.addFlashAttribute("success", "Workout deleted successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Workout deleted successfully!");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to delete workout.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete workout.");
         }
 
         return "redirect:/workouts";
@@ -112,9 +112,9 @@ public class WorkoutController {
 
         try {
             workoutService.updateWorkoutById(workoutId, workoutDTO, user);
-            redirectAttributes.addFlashAttribute("success", "Workout updated successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Workout updated successfully!");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to update workout.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to update workout.");
         }
 
         return "redirect:/workouts";

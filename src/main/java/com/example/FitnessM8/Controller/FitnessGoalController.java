@@ -72,9 +72,9 @@ public class FitnessGoalController {
     public String createFitnessGoal(@ModelAttribute FitnessGoalDTO fitnessGoalDTO, Principal principal, RedirectAttributes redirectAttributes){
         try {
             fitnessGoalService.createFitnessGoal(fitnessGoalDTO, principal.getName());
-            redirectAttributes.addFlashAttribute("success", "Fitness goal created successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Fitness goal created successfully!");
         }catch (RuntimeException e){
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to create fitness goal.");
         }
         return "redirect:/fitness-goals";
     }
@@ -90,9 +90,9 @@ public class FitnessGoalController {
 
         try {
             fitnessGoalService.deleteFitnessGoalById(fitnessGoalId, user);
-            redirectAttributes.addFlashAttribute("success", "Fitness goal deleted successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Fitness goal deleted successfully!");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to delete fitness goal.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete fitness goal.");
         }
 
         return "redirect:/fitness-goals";
@@ -104,7 +104,7 @@ public class FitnessGoalController {
                                       Principal principal,
                                       RedirectAttributes redirectAttributes) {
         if (selectedGoalIds == null || selectedGoalIds.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "No goals selected for deletion.");
+            redirectAttributes.addFlashAttribute("errorMessage", "No goals selected for deletion.");
             return "redirect:/fitness-goals";
         }
 
@@ -114,9 +114,9 @@ public class FitnessGoalController {
 
         try {
             fitnessGoalService.deleteMultipleGoals(selectedGoalIds, user);
-            redirectAttributes.addFlashAttribute("success", "Selected goals deleted successfully.");
+            redirectAttributes.addFlashAttribute("successMessage", "Selected goals deleted successfully.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to delete selected goals.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete selected goals.");
         }
 
         return "redirect:/fitness-goals";
@@ -138,9 +138,9 @@ public class FitnessGoalController {
 
         try {
             fitnessGoalService.updateFitnessGoalById(fitnessGoalId, fitnessGoalDTO, user);
-            redirectAttributes.addFlashAttribute("success", "Fitness goal updated successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Fitness goal updated successfully!");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to update fitness goal.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to update fitness goal.");
         }
 
         return "redirect:/fitness-goals";

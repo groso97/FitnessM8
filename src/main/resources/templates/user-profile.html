@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:x-transition="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/head :: commonHead('FitnessM8 | User profile')}"></head>
 
 <body class="flex bg-gray-900 text-white min-h-screen">
@@ -9,16 +9,8 @@
 
 <!-- Main Content -->
 <main class="flex-1 p-8 overflow-y-auto">
-    <!-- Success Message -->
-    <div th:if="${successMessage}" class="mb-6 p-4 bg-green-700 text-white rounded-lg shadow">
-        <p th:text="${successMessage}"></p>
-    </div>
-    <div th:if="${infoMessage}" class="mb-6 p-4 bg-blue-700 text-white rounded-lg shadow">
-        <p th:text="${infoMessage}"></p>
-    </div>
-    <div th:if="${errorMessage}" class="mb-6 p-4 bg-red-700 text-white rounded-lg shadow">
-        <p th:text="${errorMessage}"></p>
-    </div>
+    <div th:insert="~{fragments/alerts :: flashMessages}"></div>
+
     <!-- Header -->
     <div class="flex justify-between items-center mb-10">
         <h2 class="text-3xl font-bold">Your Profile</h2>
@@ -96,5 +88,6 @@
     </form>
 
 </main>
+
 </body>
 </html>

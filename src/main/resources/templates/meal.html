@@ -9,15 +9,7 @@
 
 <!-- Main Content -->
 <main class="flex-1 p-8 overflow-y-auto">
-    <!-- Success Message -->
-    <div th:if="${success}" class="mb-4 p-4 bg-green-600 text-white rounded-lg">
-        <p th:text="${success}"></p>
-    </div>
-
-    <!-- Error Message -->
-    <div th:if="${error}" class="mb-4 p-4 bg-red-600 text-white rounded-lg">
-        <p th:text="${error}"></p>
-    </div>
+    <div th:insert="~{fragments/alerts :: flashMessages}"></div>
 
     <!-- Header -->
     <div class="flex justify-between items-center mb-10">

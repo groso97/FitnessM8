@@ -71,9 +71,9 @@ public class MealController {
     public String createMeal(@ModelAttribute MealDTO mealDTO, Principal principal, RedirectAttributes redirectAttributes){
         try {
             mealService.createMeal(mealDTO, principal.getName());
-            redirectAttributes.addFlashAttribute("success", "Meal created successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Meal created successfully!");
         }catch (RuntimeException e){
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to create meal.");
         }
         return "redirect:/meals";
     }
@@ -89,9 +89,9 @@ public class MealController {
 
         try {
             mealService.deleteMealById(mealId, user);
-            redirectAttributes.addFlashAttribute("success", "Meal deleted successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Meal deleted successfully!");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to delete meal.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete meal.");
         }
 
         return "redirect:/meals";
@@ -112,9 +112,9 @@ public class MealController {
 
         try {
             mealService.updateMealById(mealId, mealDTO, user);
-            redirectAttributes.addFlashAttribute("success", "Meal updated successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Meal updated successfully!");
         } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", "Failed to update meal.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to update meal.");
         }
 
         return "redirect:/meals";
