@@ -44,12 +44,20 @@
     </div>
 
     <div>
-      <label class="block mb-2 text-sm font-medium text-gray-300">Completed</label>
-      <input type="hidden" name="completed" value="false" />
-      <input type="checkbox" name="completed"
-             th:checked="${fitnessGoalDTO != null and fitnessGoalDTO.completed}"
-             class="h-5 w-5 text-purple-600">
+      <label class="block mb-2 text-sm font-medium text-gray-300">Status</label>
+      <input type="hidden" name="completed" id="completedStatusEdit" th:value="${fitnessGoalDTO.completed}" />
+      <div class="flex space-x-4">
+        <button type="button" id="btnCompletedEdit" onclick="setStatusEdit(true)"
+                class="py-2 px-4 rounded-lg text-white bg-gray-700 hover:bg-green-600 transition">
+          Completed ✔
+        </button>
+        <button type="button" id="btnInProgressEdit" onclick="setStatusEdit(false)"
+                class="py-2 px-4 rounded-lg text-white bg-gray-700 hover:bg-red-600 transition">
+          In Progress ✖
+        </button>
+      </div>
     </div>
+
 
 
     <div class="flex gap-4">
@@ -89,10 +97,20 @@
     </div>
 
     <div>
-      <label class="block mb-2 text-sm font-medium text-gray-300">Completed</label>
-      <input type="checkbox" name="completed"
-             class="h-5 w-5 text-purple-600">
+      <label class="block mb-2 text-sm font-medium text-gray-300">Status</label>
+      <input type="hidden" name="completed" id="completedStatusCreate" value="false" />
+      <div class="flex space-x-4">
+        <button type="button" id="btnCompletedCreate" onclick="setStatusCreate(true)"
+                class="py-2 px-4 rounded-lg text-white bg-gray-700 hover:bg-green-600 transition">
+          Completed ✔
+        </button>
+        <button type="button" id="btnInProgressCreate" onclick="setStatusCreate(false)"
+                class="py-2 px-4 rounded-lg text-white bg-gray-700 hover:bg-red-600 transition">
+          In Progress ✖
+        </button>
+      </div>
     </div>
+
 
 
     <div class="flex gap-4">
@@ -107,19 +125,6 @@
   </form>
 
 </main>
-<script>
-  // Fix to ensure checkbox always sends correct value
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form[th\\:if]"); // matches edit form
-    if (!form) return;
 
-    form.addEventListener("submit", function () {
-      const checkbox = form.querySelector("input[type='checkbox'][name='completed']");
-      if (!checkbox.checked) {
-        checkbox.disabled = true; // let hidden input with value="false" be sent
-      }
-    });
-  });
-</script>
 </body>
 </html>

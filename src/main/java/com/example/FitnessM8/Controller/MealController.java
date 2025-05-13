@@ -97,6 +97,30 @@ public class MealController {
         return "redirect:/meals";
     }
 
+    //brisanje vise postojecih mealsa
+    @PostMapping("/delete-multiple")
+    public String deleteMultipleGoals(@RequestParam(name = "selectedMeals", required = false) List<Long> selectedMealIds,
+                                      Principal principal,
+                                      RedirectAttributes redirectAttributes) {
+        if (selectedMealIds == null || selectedMealIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "No meals selected for deletion.");
+            return "redirect:/meals";
+        }
+
+        String currentUserEmail = principal.getName();
+        User user = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        try {
+            mealService.deleteMultipleWorkouts(selectedMealIds, user);
+            redirectAttributes.addFlashAttribute("successMessage", "Selected meals deleted successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete selected meals.");
+        }
+
+        return "redirect:/meals";
+    }
+
 
     //updateanje postojeceg meala
     @PostMapping("/update/{mealId}")

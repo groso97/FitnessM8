@@ -4,6 +4,7 @@ import com.example.FitnessM8.DTO.MealDTO;
 import com.example.FitnessM8.Mapper.MealMapper;
 import com.example.FitnessM8.Model.Meal;
 import com.example.FitnessM8.Model.User;
+import com.example.FitnessM8.Model.Workout;
 import com.example.FitnessM8.Repository.MealRepository;
 import com.example.FitnessM8.Repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,18 @@ public class MealService {
         }
 
         mealRepository.delete(meal);
+    }
+
+    public void deleteMultipleWorkouts(List<Long> mealIds, User user) {
+        List<Meal> mealsToDelete = mealRepository.findAllById(mealIds);
+
+        for (Meal meal : mealsToDelete) {
+            if (!meal.getUser().getUserId().equals(user.getUserId())) {
+                throw new RuntimeException("Unauthorized deletion attempt.");
+            }
+        }
+
+        mealRepository.deleteAll(mealsToDelete);
     }
 
     public void updateMealById(Long mealId, MealDTO mealDTO, User user){

@@ -63,9 +63,11 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .usernameParameter("email")
+                        .failureUrl("/login?error=true") // Kada je login neuspješan
                         .permitAll()
                         .successHandler(successHandler())
                 )
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")

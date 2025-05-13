@@ -97,6 +97,31 @@ public class WorkoutController {
         return "redirect:/workouts";
     }
 
+    //brisanje vise postojecih workoutsa
+    @PostMapping("/delete-multiple")
+    public String deleteMultipleGoals(@RequestParam(name = "selectedWorkouts", required = false) List<Long> selectedWorkoutIds,
+                                      Principal principal,
+                                      RedirectAttributes redirectAttributes) {
+        if (selectedWorkoutIds == null || selectedWorkoutIds.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "No workouts selected for deletion.");
+            return "redirect:/workouts";
+        }
+
+        String currentUserEmail = principal.getName();
+        User user = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        try {
+            workoutService.deleteMultipleWorkouts(selectedWorkoutIds, user);
+            redirectAttributes.addFlashAttribute("successMessage", "Selected workouts deleted successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete selected workouts.");
+        }
+
+        return "redirect:/workouts";
+    }
+
+
 
     //updateanje postojeceg workout
     @PostMapping("/update/{workoutId}")
