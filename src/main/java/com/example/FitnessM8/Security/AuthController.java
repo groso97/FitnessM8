@@ -3,11 +3,6 @@ package com.example.FitnessM8.Security;
 import com.example.FitnessM8.Model.User;
 import com.example.FitnessM8.Repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,64 +18,71 @@ public class AuthController {
 
     private final UserRepository userRepository;
 
-    private final CustomUserDetailsService userDetailsService;
 
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(UserRepository userRepository, CustomUserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/login")
-    public String showLoginPage(HttpServletRequest request) {
+    public String showLoginPage(@RequestParam(value = "error", required = false) String error, Model model,HttpServletRequest request) {
         // Provjera da li je korisnik već prijavljen
         if (request.getUserPrincipal() != null) {
             return "redirect:/dashboard";  // Ako je korisnik prijavljen, preusmjerenje na dashboard
         }
-        return "login";  // Inače prikazuj login stranicu
+
+        if (error != null) {
+            model.addAttribute("loginErrorMessage", "Invalid email or password. Please try again.");
+        }
+
+        return "login";
     }
 
     @GetMapping("/register")
     public String showRegistrationPage() {
-        return "registration";  // Pokaži stranicu za registraciju
+        return "registration";
     }
 
 
 
     @PostMapping("/register")
-    public String registerUser(@RequestParam String firstname, @RequestParam String lastname, @RequestParam String username, @RequestParam String email, @RequestParam String password,
+    public String registerUser(@RequestParam String firstname,
+                               @RequestParam String lastname,
+                               @RequestParam String username,
+                               @RequestParam String email,
+                               @RequestParam String password,
+                               @RequestParam("confirm-password") String confirmPassword,
                                Model model, RedirectAttributes redirectAttributes) {
 
-        // Provjera postoji li korisnik s tim emailom
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("passwordError", "Passwords do not match!");
+            return "registration";
+        }
+
         if (userRepository.findByEmail(email).isPresent()) {
-            model.addAttribute("error", "Email already in use!");
-            return "registration";  // Vraća na stranicu ako postoji problem
+            model.addAttribute("emailError", "Email already in use!");
+            return "registration";
         }
 
         if (userRepository.findByUsername(username).isPresent()) {
-            model.addAttribute("error", "Username already in use!");
-            return "registration";  // Vraća na stranicu ako postoji problem
+            model.addAttribute("usernameError", "Username already in use!");
+            return "registration";
         }
 
-        // Kreiranje novog korisnika
         User newUser = new User();
         newUser.setFirstName(firstname);
         newUser.setLastName(lastname);
         newUser.setUsername(username);
         newUser.setEmail(email);
-        newUser.setPassword(passwordEncoder.encode(password));  // Šifriranje lozinke
+        newUser.setPassword(passwordEncoder.encode(password));
         newUser.setRegistrationDate(LocalDate.now());
 
-        // Spremanje korisnika u bazu podataka
         userRepository.save(newUser);
 
-        // Dodavanje flash poruke za uspjeh
-        redirectAttributes.addFlashAttribute("message", "Registration successful! Please login.");
+        redirectAttributes.addFlashAttribute("successMessage", "Registration successful! Please login.");
 
-        // Preusmjeravanje na login stranicu
         return "redirect:/login";
     }
-
 }

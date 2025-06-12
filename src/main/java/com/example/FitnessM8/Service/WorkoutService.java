@@ -2,7 +2,6 @@ package com.example.FitnessM8.Service;
 
 import com.example.FitnessM8.DTO.WorkoutDTO;
 import com.example.FitnessM8.Mapper.WorkoutMapper;
-import com.example.FitnessM8.Model.FitnessGoal;
 import com.example.FitnessM8.Model.User;
 import com.example.FitnessM8.Model.Workout;
 import com.example.FitnessM8.Repository.UserRepository;

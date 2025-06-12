@@ -1,10 +1,8 @@
 package com.example.FitnessM8.Controller;
 
 import com.example.FitnessM8.DTO.MealDTO;
-import com.example.FitnessM8.DTO.WorkoutDTO;
 import com.example.FitnessM8.Model.Meal;
 import com.example.FitnessM8.Model.User;
-import com.example.FitnessM8.Model.Workout;
 import com.example.FitnessM8.Repository.UserRepository;
 import com.example.FitnessM8.Service.MealService;
 import org.springframework.stereotype.Controller;

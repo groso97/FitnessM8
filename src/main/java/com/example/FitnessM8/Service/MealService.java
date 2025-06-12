@@ -4,7 +4,6 @@ import com.example.FitnessM8.DTO.MealDTO;
 import com.example.FitnessM8.Mapper.MealMapper;
 import com.example.FitnessM8.Model.Meal;
 import com.example.FitnessM8.Model.User;
-import com.example.FitnessM8.Model.Workout;
 import com.example.FitnessM8.Repository.MealRepository;
 import com.example.FitnessM8.Repository.UserRepository;
 import org.springframework.stereotype.Service;
