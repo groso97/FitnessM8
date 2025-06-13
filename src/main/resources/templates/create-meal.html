@@ -17,46 +17,46 @@
 
   <!-- Form for EDIT -->
   <form th:if="${isEdit}" th:action="@{/meals/update/{id}(id=${mealDTO.mealId})}"
-        method="post" class="space-y-6">
+        th:object="${mealDTO}" method="post" class="space-y-6">
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Meal Name</label>
       <input type="text" name="mealName"
              th:value="${mealDTO.mealName}"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('mealName')}" th:errors="*{mealName}"></span>
     </div>
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Calories</label>
       <input type="text" name="calories"
              th:value="${mealDTO.calories}"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('calories')}" th:errors="*{calories}"></span>
     </div>
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Proteins</label>
       <input type="number" name="proteins"
              th:value="${mealDTO.proteins}"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('proteins')}" th:errors="*{proteins}"></span>
     </div>
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Fats</label>
       <input type="number" name="fats"
              th:value="${mealDTO.fats}"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('fats')}" th:errors="*{fats}"></span>
     </div>
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Carbs</label>
       <input type="number" name="carbs"
              th:value="${mealDTO.carbs}"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('carbs')}" th:errors="*{carbs}"></span>
     </div>
 
     <div class="flex gap-4">
@@ -71,42 +71,42 @@
   </form>
 
   <!-- Form for CREATE -->
-  <form th:unless="${isEdit}" th:action="@{/meals/create-meal}"
+  <form th:unless="${isEdit}" th:action="@{/meals/create-meal}" th:object="${mealDTO}"
         method="post" class="space-y-6">
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Meal Name</label>
       <input type="text" name="mealName"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('mealName')}" th:errors="*{mealName}"></span>
     </div>
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Calories</label>
       <input type="text" name="calories"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('calories')}" th:errors="*{calories}"></span>
     </div>
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Proteins</label>
       <input type="number" name="proteins"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('proteins')}" th:errors="*{proteins}"></span>
     </div>
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Fats</label>
       <input type="number" name="fats"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('fats')}" th:errors="*{fats}"></span>
     </div>
 
     <div>
       <label class="block mb-2 text-sm font-medium text-gray-300">Carbs</label>
       <input type="number" name="carbs"
-             required
              class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+      <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('carbs')}" th:errors="*{carbs}"></span>
     </div>
 
     <div class="flex gap-4">

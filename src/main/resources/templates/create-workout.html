@@ -17,38 +17,34 @@
 
     <!-- Form for EDIT -->
     <form th:if="${isEdit}" th:action="@{/workouts/update/{id}(id=${workoutDTO.workoutId})}"
-          method="post" class="space-y-6">
+          th:object="${workoutDTO}" method="post" class="space-y-6">
 
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-300">Workout Name</label>
-            <input type="text" name="workoutName"
-                   th:value="${workoutDTO.workoutName}"
-                   required
+            <input type="text" th:field="*{workoutName}"
                    class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+            <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('workoutName')}" th:errors="*{workoutName}"></span>
         </div>
 
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-300">Exercise Type</label>
-            <input type="text" name="exerciseType"
-                   th:value="${workoutDTO.exerciseType}"
-                   required
+            <input type="text" th:field="*{exerciseType}"
                    class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+            <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('exerciseType')}" th:errors="*{exerciseType}"></span>
         </div>
 
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-300">Duration (minutes)</label>
-            <input type="number" name="durationMinutes"
-                   th:value="${workoutDTO.durationMinutes}"
-                   required
+            <input type="number" th:field="*{durationMinutes}"
                    class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+            <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('durationMinutes')}" th:errors="*{durationMinutes}"></span>
         </div>
 
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-300">Calories Burned</label>
-            <input type="number" name="caloriesBurned"
-                   th:value="${workoutDTO.caloriesBurned}"
-                   required
+            <input type="number" th:field="*{caloriesBurned}"
                    class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+            <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('caloriesBurned')}" th:errors="*{caloriesBurned}"></span>
         </div>
 
         <div class="flex gap-4">
@@ -63,35 +59,34 @@
     </form>
 
     <!-- Form for CREATE -->
-    <form th:unless="${isEdit}" th:action="@{/workouts/create-workout}"
-          method="post" class="space-y-6">
+    <form th:unless="${isEdit}" th:action="@{/workouts/create-workout}" th:object="${workoutDTO}" method="post" class="space-y-6">
 
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-300">Workout Name</label>
-            <input type="text" name="workoutName"
-                   required
+            <input type="text" th:field="*{workoutName}"
                    class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+            <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('workoutName')}" th:errors="*{workoutName}"></span>
         </div>
 
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-300">Exercise Type</label>
-            <input type="text" name="exerciseType"
-                   required
+            <input type="text" th:field="*{exerciseType}"
                    class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+            <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('exerciseType')}" th:errors="*{exerciseType}"></span>
         </div>
 
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-300">Duration (minutes)</label>
-            <input type="number" name="durationMinutes"
-                   required
+            <input type="number" th:field="*{durationMinutes}"
                    class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+            <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('durationMinutes')}" th:errors="*{durationMinutes}"></span>
         </div>
 
         <div>
             <label class="block mb-2 text-sm font-medium text-gray-300">Calories Burned</label>
-            <input type="number" name="caloriesBurned"
-                   required
+            <input type="number" th:field="*{caloriesBurned}"
                    class="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:border-purple-500">
+            <span class="text-red-500 text-sm" th:if="${#fields.hasErrors('caloriesBurned')}" th:errors="*{caloriesBurned}"></span>
         </div>
 
         <div class="flex gap-4">
@@ -104,6 +99,7 @@
             </a>
         </div>
     </form>
+
 
 </main>
 

@@ -5,8 +5,10 @@ import com.example.FitnessM8.Model.Meal;
 import com.example.FitnessM8.Model.User;
 import com.example.FitnessM8.Repository.UserRepository;
 import com.example.FitnessM8.Service.MealService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,7 +39,9 @@ public class MealController {
     }
 
     @GetMapping("/create-meal")
-    public String showCreateMealPage(){
+    public String showCreateMealPage(Model model){
+        model.addAttribute("mealDTO", new MealDTO(null, "", null, null, null, null));
+        model.addAttribute("isEdit", false);
         return "create-meal";
     }
 
@@ -66,14 +70,27 @@ public class MealController {
 
     //kreiranje novog meala
     @PostMapping("/create-meal")
-    public String createMeal(@ModelAttribute MealDTO mealDTO, Principal principal, RedirectAttributes redirectAttributes){
+    public String createMeal(@Valid @ModelAttribute("mealDTO") MealDTO mealDTO,
+                             BindingResult bindingResult,
+                             Principal principal,
+                             Model model,
+                             RedirectAttributes redirectAttributes
+    ){
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isEdit", false); // za reuse forme
+            return "create-meal";
+        }
+
         try {
             mealService.createMeal(mealDTO, principal.getName());
             redirectAttributes.addFlashAttribute("successMessage", "Meal created successfully!");
+            return "redirect:/meals";
         }catch (RuntimeException e){
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to create meal.");
+            model.addAttribute("isEdit", false);
+            return "create-meal";
         }
-        return "redirect:/meals";
     }
 
 
@@ -123,9 +140,16 @@ public class MealController {
     //updateanje postojeceg meala
     @PostMapping("/update/{mealId}")
     public String updateWorkoutById(@PathVariable Long mealId,
-                                    @ModelAttribute MealDTO mealDTO,
+                                    @Valid @ModelAttribute MealDTO mealDTO,
+                                    BindingResult bindingResult,
                                     Principal principal,
+                                    Model model,
                                     RedirectAttributes redirectAttributes){
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isEdit", true);
+            return "create-meal";
+        }
 
         String currentUserEmail = principal.getName();
 

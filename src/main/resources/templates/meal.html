@@ -54,11 +54,11 @@
                        onchange="handleCheckboxChange(this, 'selectedMeals')"/>
 
                 <!-- Meal Info -->
-                <h3 class="text-xl font-semibold mb-2" th:text="${meal.mealName()}">Meal Name</h3>
-                <p class="text-gray-400">Calories: <span th:text="${meal.calories()}"></span></p>
-                <p class="text-gray-400">Proteins: <span th:text="${meal.proteins()}"></span> g</p>
-                <p class="text-gray-400">Fats: <span th:text="${meal.fats()}"></span> g</p>
-                <p class="text-gray-400">Carbs: <span th:text="${meal.carbs()}"></span> g</p>
+                <h3 class="text-xl font-semibold mb-2" th:text="${meal.mealName()}"></h3>
+                <p class="text-gray-400">Calories: <span th:text="${meal.calories()} + 'kcal'"></span></p>
+                <p class="text-gray-400">Proteins: <span th:text="${meal.proteins()} + 'g'"></span></p>
+                <p class="text-gray-400">Fats: <span th:text="${meal.fats()} + 'g'"></span></p>
+                <p class="text-gray-400">Carbs: <span th:text="${meal.carbs()} + 'g'"></span></p>
 
                 <!-- Action buttons -->
                 <div class="flex space-x-4 mt-4">

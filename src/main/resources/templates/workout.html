@@ -53,10 +53,10 @@
                        class="form-checkbox h-5 w-5 text-purple-600 mb-4"
                        onchange="handleCheckboxChange(this, 'selectedWorkouts')" />
 
-                <!-- Goal Info -->
-                <h3 class="text-xl font-semibold mb-2" th:text="${workout.workoutName}">Workout Name</h3>
-                <p class="text-gray-400">Exercise type: <span th:text="${workout.exerciseType}">Cardio</span></p>
-                <p class="text-gray-400">Duration: <span th:text="${workout.durationMinutes}"></span> min</p>
+                <!-- Workout Info -->
+                <h3 class="text-xl font-semibold mb-2" th:text="${workout.workoutName}"></h3>
+                <p class="text-gray-400">Exercise type: <span th:text="${workout.exerciseType}"></span></p>
+                <p class="text-gray-400">Duration: <span th:text="${workout.durationMinutes}"></span></p>
                 <p class="text-gray-400">Calories: <span th:text="${workout.caloriesBurned}"></span></p>
 
                 <div class="flex space-x-4 mt-4">

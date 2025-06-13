@@ -1,12 +1,15 @@
 package com.example.FitnessM8.Controller;
 
 import com.example.FitnessM8.DTO.FitnessGoalDTO;
+import com.example.FitnessM8.DTO.MealDTO;
 import com.example.FitnessM8.Model.FitnessGoal;
 import com.example.FitnessM8.Model.User;
 import com.example.FitnessM8.Repository.UserRepository;
 import com.example.FitnessM8.Service.FitnessGoalService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -39,7 +42,9 @@ public class FitnessGoalController {
     }
 
     @GetMapping("/create-fitness-goal")
-    public String showCreateFitnessGoalPage(){
+    public String showCreateFitnessGoalPage(Model model){
+        model.addAttribute("fitnessGoalDTO", new FitnessGoalDTO(null, "", null, null, null));
+        model.addAttribute("isEdit", false);
         return "create-fitness-goal";
     }
 
@@ -69,14 +74,27 @@ public class FitnessGoalController {
 
     //kreiranje novog fitness goala
     @PostMapping("/create-fitness-goal")
-    public String createFitnessGoal(@ModelAttribute FitnessGoalDTO fitnessGoalDTO, Principal principal, RedirectAttributes redirectAttributes){
+    public String createFitnessGoal(@Valid @ModelAttribute("fitnessGoalDTO") FitnessGoalDTO fitnessGoalDTO,
+                                    BindingResult bindingResult,
+                                    Principal principal,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes
+    ){
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isEdit", false); // za reuse forme
+            return "create-fitness-goal";
+        }
+
         try {
             fitnessGoalService.createFitnessGoal(fitnessGoalDTO, principal.getName());
             redirectAttributes.addFlashAttribute("successMessage", "Fitness goal created successfully!");
+            return "redirect:/fitness-goals";
         }catch (RuntimeException e){
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to create fitness goal.");
+            model.addAttribute("isEdit", false);
+            return "create-fitness-goal";
         }
-        return "redirect:/fitness-goals";
     }
 
 
@@ -127,9 +145,17 @@ public class FitnessGoalController {
     //updateanje postojeceg fitness goala
     @PostMapping("/update/{fitnessGoalId}")
     public String updateFitnessGoalById(@PathVariable Long fitnessGoalId,
-                                    @ModelAttribute FitnessGoalDTO fitnessGoalDTO,
+                                    @Valid @ModelAttribute FitnessGoalDTO fitnessGoalDTO,
+                                    BindingResult bindingResult,
                                     Principal principal,
-                                    RedirectAttributes redirectAttributes){
+                                    Model model,
+                                    RedirectAttributes redirectAttributes
+    ){
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isEdit", true);
+            return "create-fitness-goal";
+        }
 
         String currentUserEmail = principal.getName();
 

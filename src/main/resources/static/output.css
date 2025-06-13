@@ -7,6 +7,7 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-red-500: oklch(63.7% 0.237 25.331);
     --color-red-600: oklch(57.7% 0.245 27.325);
     --color-red-700: oklch(50.5% 0.213 27.518);
     --color-yellow-400: oklch(85.2% 0.199 91.936);
@@ -267,9 +268,6 @@
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
   }
-  .mb-3 {
-    margin-bottom: calc(var(--spacing) * 3);
-  }
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
   }
@@ -494,9 +492,6 @@
   .bg-white {
     background-color: var(--color-white);
   }
-  .bg-yellow-600 {
-    background-color: var(--color-yellow-600);
-  }
   .object-cover {
     object-fit: cover;
   }
@@ -607,14 +602,14 @@
   .text-green-400 {
     color: var(--color-green-400);
   }
-  .text-green-600 {
-    color: var(--color-green-600);
-  }
   .text-purple-400 {
     color: var(--color-purple-400);
   }
   .text-purple-600 {
     color: var(--color-purple-600);
+  }
+  .text-red-500 {
+    color: var(--color-red-500);
   }
   .text-red-600 {
     color: var(--color-red-600);
@@ -687,13 +682,6 @@
       }
     }
   }
-  .hover\:bg-green-700 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-green-700);
-      }
-    }
-  }
   .hover\:bg-purple-600 {
     &:hover {
       @media (hover: hover) {
@@ -719,13 +707,6 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-red-700);
-      }
-    }
-  }
-  .hover\:bg-yellow-700 {
-    &:hover {
-      @media (hover: hover) {
-        background-color: var(--color-yellow-700);
       }
     }
   }
