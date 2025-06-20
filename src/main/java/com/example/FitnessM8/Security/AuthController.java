@@ -1,12 +1,16 @@
 package com.example.FitnessM8.Security;
 
+import com.example.FitnessM8.DTO.UserRegistrationDTO;
 import com.example.FitnessM8.Model.User;
 import com.example.FitnessM8.Repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -41,42 +45,41 @@ public class AuthController {
     }
 
     @GetMapping("/register")
-    public String showRegistrationPage() {
+    public String showRegistrationPage(Model model) {
+        model.addAttribute("user", new UserRegistrationDTO(null,null,null,null,null,null));
         return "registration";
     }
 
 
 
     @PostMapping("/register")
-    public String registerUser(@RequestParam String firstname,
-                               @RequestParam String lastname,
-                               @RequestParam String username,
-                               @RequestParam String email,
-                               @RequestParam String password,
-                               @RequestParam("confirm-password") String confirmPassword,
-                               Model model, RedirectAttributes redirectAttributes) {
+    public String registerUser(@ModelAttribute("user") @Valid UserRegistrationDTO userRegistrationDTO,
+                               BindingResult bindingResult,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
 
-        if (!password.equals(confirmPassword)) {
-            model.addAttribute("passwordError", "Passwords do not match!");
-            return "registration";
+        if (!userRegistrationDTO.password().equals(userRegistrationDTO.confirmPassword())) {
+            bindingResult.rejectValue("confirmPassword", "error.user", "Passwords do not match.");
         }
 
-        if (userRepository.findByEmail(email).isPresent()) {
-            model.addAttribute("emailError", "Email already in use!");
-            return "registration";
+        if (userRepository.findByEmail(userRegistrationDTO.email()).isPresent()) {
+            bindingResult.rejectValue("email", "error.user", "Email already in use.");
         }
 
-        if (userRepository.findByUsername(username).isPresent()) {
-            model.addAttribute("usernameError", "Username already in use!");
+        if (userRepository.findByUsername(userRegistrationDTO.username()).isPresent()) {
+            bindingResult.rejectValue("username", "error.user", "Username already in use.");
+        }
+
+        if (bindingResult.hasErrors()) {
             return "registration";
         }
 
         User newUser = new User();
-        newUser.setFirstName(firstname);
-        newUser.setLastName(lastname);
-        newUser.setUsername(username);
-        newUser.setEmail(email);
-        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setFirstName(userRegistrationDTO.firstname());
+        newUser.setLastName(userRegistrationDTO.lastname());
+        newUser.setUsername(userRegistrationDTO.username());
+        newUser.setEmail(userRegistrationDTO.email());
+        newUser.setPassword(passwordEncoder.encode(userRegistrationDTO.password()));
         newUser.setRegistrationDate(LocalDate.now());
 
         userRepository.save(newUser);

@@ -71,8 +71,8 @@
         <p class="text-gray-400" th:text="'Description: ' + ${fitnessGoal.description()}"></p>
         <p class="text-gray-400" th:text="'Due: ' + ${fitnessGoal.targetDate()}"></p>
 
-        <span th:if="${fitnessGoal.completed()}" class="text-green-400 font-medium"></span>
-        <span th:unless="${fitnessGoal.completed()}" class="text-yellow-400 font-medium"></span>
+        <span th:if="${fitnessGoal.completed()}" class="text-green-400 font-medium">Completed</span>
+        <span th:unless="${fitnessGoal.completed()}" class="text-yellow-400 font-medium">In Progress</span>
       </div>
 
       <!-- Action buttons -->

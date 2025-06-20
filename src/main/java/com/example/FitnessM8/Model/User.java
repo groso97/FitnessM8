@@ -23,7 +23,6 @@ public class User {
     @Column(nullable = false,length = 50)
     private String username;
 
-    @Email
     @Column(nullable = false,unique = true,length = 50)
     private String email;
 
@@ -47,7 +46,7 @@ public class User {
     private List<Meal> meals;
 
 
-    public User(){};
+    public User() {}
 
     public User(String firstname, String lastname, String username, String email, String password) {
         this.firstname = firstname;
